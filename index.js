@@ -8,13 +8,11 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     const terms = document.getElementById('terms').checked;
 
     // Validate age (between 18 and 55 years)
-    const age = calculateAge(dob);
-    if (age < 18 || age > 55) {
-        alert('Age must be between 18 and 55 years.');
+    if (!isValidAge(dob)) {
+        alert("Age must be between 18 and 55 years.");
         return;
     }
 
-   
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     if (!emailPattern.test(email)) {
@@ -44,16 +42,19 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     document.getElementById('registrationForm').reset();
 });
 
-function calculateAge(dob) {
+function isValidAge(dob) {
     const birthDate = new Date(dob);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
+
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--;
     }
-    return age;
+
+    return age >= 18 && age <= 55;
 }
+
 window.onload = function() {
     const users = JSON.parse(localStorage.getItem('users')) || [];
     const table = document.getElementById('entriesBody');
