@@ -52,7 +52,7 @@ function saveUser(user) {
 }
 
 function loadUsers() {
-    const usersTableBody = document.getElementById('usersTable').querySelector('tbody');
+    const usersTableBody = document.getElementById('entriesBody').querySelector('tbody');
     usersTableBody.innerHTML = '';
 
     const users = JSON.parse(localStorage.getItem('users')) || [];
