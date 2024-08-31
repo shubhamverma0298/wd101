@@ -28,9 +28,19 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         dob: dob,
         terms: terms
     };
+    const table = document.getElementById('entriesBody');
+    const newRow = table.insertRow();
+    newRow.insertCell(0).innerText = name;
+    newRow.insertCell(1).innerText = email;
+    newRow.insertCell(2).innerText = password;
+    newRow.insertCell(3).innerText = dob; 
+    newRow.insertCell(4).innerText = terms ? 'true' : 'false';
 
-    saveUser(user);
-    loadUsers();
+    // Store data in localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push({ name, email, password, dob, terms });
+    localStorage.setItem('users', JSON.stringify(users));
+
     document.getElementById('registrationForm').reset();
 });
 
@@ -44,32 +54,27 @@ function calculateAge(dob) {
     }
     return age;
 }
-
-function saveUser(user) {
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-    users.push(user);
-    localStorage.setItem('users', JSON.stringify(users));
-}
-
-function loadUsers() {
-    const usersTableBody = document.getElementById('entriesBody').querySelector('tbody');
-    usersTableBody.innerHTML = '';
-
+window.onload = function() {
     const users = JSON.parse(localStorage.getItem('users')) || [];
+    const table = document.getElementById('entriesBody');
     users.forEach(user => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.password}</td>
-            <td>${user.dob}</td>
-            <td>${user.terms ? 'true' : 'false'}</td>
-        `;
-        
-        usersTableBody.appendChild(row);
+        const newRow = table.insertRow();
+        newRow.insertCell(0).innerText = user.name;
+        newRow.insertCell(1).innerText = user.email;
+        newRow.insertCell(2).innerText = user.password;
+        newRow.insertCell(3).innerText = user.dob;
+        newRow.insertCell(4).innerText = user.terms ? 'true' : 'false' ;
     });
-}
+};
 
-// Load users on page load
-window.onload = loadUsers;
+// Clear data function
+document.getElementById('clearData').addEventListener('click', function() {
+    // Clear localStorage
+    localStorage.removeItem('users');
+
+    // Clear table
+    const table = document.getElementById('entriesBody');
+    while (table.rows.length > 0) {
+        table.deleteRow(0);
+    }
+});
